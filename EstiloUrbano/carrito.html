@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu carrito - EstiloUrbano</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { background:#121212; color:#f5f5f5; font-family: 'Montserrat', sans-serif; }
+  header { text-align:center; padding:10px; }
+  #logo-container { margin-bottom:15px; }
+  #cart-container { max-width:900px; margin:30px auto; background:#fff; color:#000; padding:20px; border-radius:15px; }
+  .cart-item { display:flex; align-items:center; justify-content:space-between; margin-bottom:15px; }
+  .cart-item img { width:80px; border-radius:10px; margin-right:15px; }
+  .cart-info { flex:1; }
+  .cart-actions { text-align:right; }
+  .cart-actions button, .cart-actions a { margin-left:10px; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; text-decoration:none; }
+  .total { font-size:22px; font-weight:bold; margin-top:20px; text-align:right; }
+</style>
+</head>
+<body>
+<header>
+  <div id="logo-container">
+    <img id="logo" src="logo.jpg" alt="EstiloUrbano">
+  </div>
+  <h1>Tu Carrito</h1>
+</header>
+
+<main>
+  <div id="cart-container"></div>
+</main>
+
+<script src="script.js"></script>
+<script>
+const cartContainer = document.getElementById('cart-container');
+let cart = JSON.parse(localStorage.getItem('cart')||'[]');
+
+function renderCartPage() {
+  cartContainer.innerHTML = '';
+  if(!cart.length) {
+    cartContainer.innerHTML = '<p>Tu carrito está vacío.</p>';
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach(item => {
+    const p = products.find(x => x.id===item.id);
+    if(!p) return;
+
+    const subtotal = p.price * item.qty;
+    total += subtotal;
+
+    const div = document.createElement('div');
+    div.className = 'cart-item';
+    div.innerHTML = `
+      <img src="${p.images[0]}" alt="${p.name}">
+      <div class="cart-info">
+        <strong>${p.name}</strong><br>
+        ${EUR.format(p.price)} x <input type="number" min="1" value="${item.qty}" style="width:50px;" data-id="${p.id}">
+        <span>= ${EUR.format(subtotal)}</span>
+      </div>
+      <div class="cart-actions">
+        <button data-rem="${p.id}">Eliminar</button>
+        <a href="${p.pay}" target="_blank">Comprar</a>
+      </div>
+    `;
+    cartContainer.appendChild(div);
+  });
+
+  const totalDiv = document.createElement('div');
+  totalDiv.className = 'total';
+  totalDiv.textContent = 'Total: ' + EUR.format(total);
+  cartContainer.appendChild(totalDiv);
+
+  // Eventos
+  cartContainer.querySelectorAll('[data-rem]').forEach(btn => {
+    btn.addEventListener('click', ()=>{
+      const id = btn.getAttribute('data-rem');
+      cart = cart.filter(i=>i.id!==id);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      renderCartPage();
+    });
+  });
+
+  // Cambiar cantidad
+  cartContainer.querySelectorAll('input[type="number"]').forEach(input=>{
+    input.addEventListener('change', ()=>{
+      const id = input.getAttribute('data-id');
+      const item = cart.find(i=>i.id===id);
+      if(item) {
+        item.qty = parseInt(input.value);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCartPage();
+      }
+    });
+  });
+}
+
+renderCartPage();
+</script>
+</body>
+</html>

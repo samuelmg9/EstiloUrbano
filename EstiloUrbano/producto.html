@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del producto - EstiloUrbano</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Contenedor del producto */
+    #product-detail {
+      max-width: 800px;
+      margin: 30px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    #product-detail h2 { font-size: 28px; margin-bottom:10px; color:#000; }
+    #product-detail .price { font-size:24px; font-weight:bold; color:#000; margin-bottom:15px; }
+    #product-detail .description { font-size:16px; margin-bottom:15px; color:#333; }
+
+    /* Galería de miniaturas */
+    .gallery {
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:center;
+      margin-bottom:20px;
+    }
+    .small-img {
+      width:120px;
+      border-radius:10px;
+      cursor:pointer;
+      transition: transform 0.2s;
+    }
+    .small-img:hover { transform: scale(1.05); }
+
+    /* Imagen principal */
+    .main-img {
+      width:100%;
+      max-width:400px;
+      margin-bottom:15px;
+      border-radius:10px;
+    }
+
+    /* Contenedor de Smart Buttons */
+    #paypal-button-container { margin-top: 15px; }
+
+    /* Botón Añadir al carrito con estilo EstiloUrbano */
+    .add-to-cart-btn {
+      background-color:#FFD700;
+      color:black;
+      border:none;
+      padding:12px 20px;
+      border-radius:8px;
+      font-size:16px;
+      font-weight:bold;
+      cursor:pointer;
+      transition: all 0.2s;
+      width:100%;
+      max-width:250px;
+      text-align:center;
+    }
+    .add-to-cart-btn:hover {
+      background-color:#00bfff;
+      color:white;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #00bfff;
+    }
+
+    /* Logo clicable para volver al index */
+    #logo-container {
+      background-color: #ffffff;
+      padding: 15px 0;
+      text-align:center;
+    }
+    #logo-container img {
+      max-width: 400px;
+      width: 80%;
+      height: auto;
+      cursor:pointer;
+    }
+
+    #verCarrito {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      background:#FFD700;
+      color:#000;
+      border:none;
+      padding:12px 20px;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:bold;
+      font-size:18px;
+      z-index:1000;
+      box-shadow:0 0 10px rgba(0,0,0,0.5);
+      transition:0.3s;
+    }
+    #verCarrito:hover { box-shadow:0 0 20px #00bfff; }
+    #verCarrito span { margin-left:8px; }
+
+    dialog#carrito {
+      border:none;
+      border-radius:15px;
+      padding:20px;
+      width:350px;
+      max-width:90%;
+      background: rgba(0,0,0,0.85);
+      color:white;
+    }
+    #carrito h2 { text-align:center; margin-bottom:15px; }
+    #items { margin-bottom:15px; }
+    #items div { display:flex; justify-content:space-between; margin-bottom:8px; }
+    #items div span { font-weight:bold; }
+    #carrito button {
+      background-color:#FFD700;
+      color:black;
+      border:none;
+      padding:10px 16px;
+      border-radius:6px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-right:5px;
+      transition:0.3s;
+    }
+    #carrito button:hover { box-shadow:0 0 10px #00bfff; }
+    #paypal-button-cart { margin-top:10px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div id="logo-container">
+    <img id="logo" src="logo.jpg" alt="EstiloUrbano" onclick="window.location.href='index.html'">
+  </div>
+</header>
+
+<button id="verCarrito">🛒 <span id="count">0</span></button>
+
+<main>
+  <div id="product-detail"></div>
+</main>
+
+<dialog id="carrito">
+  <h2>Tu carrito</h2>
+  <div id="items"></div>
+  <div>Total: <strong id="total">0,00 €</strong></div>
+
+  <!-- PayPal Smart Button dentro del carrito -->
+  <div id="paypal-button-cart"></div>
+
+  <button id="vaciar">Vaciar</button>
+  <button id="checkout">Ir a pagar</button>
+  <button id="cerrar">Cerrar</button>
+</dialog>
+
+<!-- SDK de PayPal -->
+<script src="https://www.paypal.com/sdk/js?client-id=AZJLuXiQjiD-hFek6F2AKXj6wTRg92bz7Bt3i2Im4Wt_5hOLklxx_oKgeTefG6mKjfndJZ2rvACBM5J1&currency=EUR"></script>
+<script src="script.js"></script>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const productId = urlParams.get('id');
+const product = products.find(p => p.id === productId);
+const container = document.getElementById('product-detail');
+
+if(product){
+  container.innerHTML = `
+    <h2>${product.name}</h2>
+    <p class="price">${EUR.format(product.price)}</p>
+    <p class="description">${product.description}</p>
+    <img src="${product.images[0]}" alt="${product.name}" class="main-img" id="main-img">
+    <div class="gallery">
+      ${product.images.map((img,index)=>`<img src="${img}" alt="${product.name} ${index+1}" class="small-img" data-index="${index}">`).join('')}
+    </div>
+    <div class="actions" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+      <div id="paypal-button-container"></div>
+      <button id="add-to-cart-detail" class="add-to-cart-btn">Añadir al carrito</button>
+    </div>
+  `;
+
+  const mainImg = document.getElementById('main-img');
+  const smallImgs = container.querySelectorAll('.small-img');
+  smallImgs.forEach(img => img.addEventListener('click', () => { mainImg.src = img.src; }));
+
+  const addBtn = document.getElementById('add-to-cart-detail');
+  addBtn.addEventListener('click', () => {
+    const found = cart.find(i => i.id === product.id);
+    if(found) found.qty++;
+    else cart.push({id: product.id, qty:1});
+    save();
+    alert(`${product.name} añadido al carrito`);
+  });
+
+  paypal.Buttons({
+    style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+    createOrder: function(data, actions) {
+      return actions.order.create({
+        purchase_units: [{ description: product.name, amount: { value: product.price.toFixed(2) } }]
+      });
+    },
+    onApprove: function(data, actions) {
+      return actions.order.capture().then(function(details) {
+        alert('Pago completado por ' + details.payer.name.given_name + '!');
+      });
+    },
+    onError: function(err) {
+      alert('Ha ocurrido un error en el pago.');
+      console.error(err);
+    }
+  }).render('#paypal-button-container');
+
+} else {
+  container.innerHTML = '<p>Producto no encontrado.</p>';
+}
+
+// Carrito con PayPal Smart Button
+function renderCart() {
+  const itemsDiv = document.getElementById('items');
+  const totalEl = document.getElementById('total');
+  const paypalCartContainer = document.getElementById('paypal-button-cart');
+
+  itemsDiv.innerHTML = '';
+  let total = 0;
+
+  cart.forEach(item => {
+    const p = products.find(prod => prod.id === item.id);
+    if(p){
+      total += p.price * item.qty;
+      const div = document.createElement('div');
+      div.innerHTML = `<span>${p.name} × ${item.qty}</span> <span>${EUR.format(p.price * item.qty)}</span>`;
+      itemsDiv.appendChild(div);
+    }
+  });
+
+  totalEl.textContent = EUR.format(total);
+  document.getElementById('count').textContent = cart.reduce((sum,i)=>sum+i.qty,0);
+
+  // RENDER PAYPAL BUTTON SOLO SI HAY PRODUCTOS
+  paypalCartContainer.innerHTML = '';
+  if(total > 0){
+    paypal.Buttons({
+      style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+      createOrder: (data, actions) => {
+        return actions.order.create({
+          purchase_units: [{ description: 'Carrito EstiloUrbano', amount: { value: total.toFixed(2) } }]
+        });
+      },
+      onApprove: (data, actions) => {
+        return actions.order.capture().then(details => {
+          alert('Pago del carrito completado por ' + details.payer.name.given_name + '!');
+          cart = [];
+          save();
+          renderCart();
+          dialog.close();
+        });
+      },
+      onError: err => {
+        console.error(err);
+        alert('Error en el pago del carrito.');
+      }
+    }).render('#paypal-button-cart');
+  }
+}
+
+// Carrito botones
+document.getElementById('verCarrito').addEventListener('click', ()=>{ renderCart(); dialog.showModal(); });
+document.getElementById('vaciar').addEventListener('click', ()=>{ cart=[]; save(); renderCart(); });
+document.getElementById('cerrar').addEventListener('click', ()=>dialog.close());
+document.getElementById('checkout').addEventListener('click', ()=> {
+  if(!cart.length){ alert('Carrito vacío'); return; }
+  const w = window.open('about:blank','_blank');
+  let html = '<h1>Finaliza tu compra</h1><ol>';
+  cart.forEach(i=>{
+    const p = products.find(x=>x.id===i.id);
+    html += `<li>${p.name} × ${i.qty} — ${EUR.format(p.price)}</li>`;
+  });
+  html += '</ol><p>Completa el pago con PayPal en los botones individuales.</p>';
+  w.document.write(html);
+});
+</script>
+</body>
+</html>

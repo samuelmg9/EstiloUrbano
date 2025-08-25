@@ -1,0 +1,163 @@
+/* ===== Fuentes ===== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+/* ===== Estilo general ===== */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #121212; /* fondo oscuro */
+    background-image: url('fondo.png'); /* pon tu imagen graffiti aquí */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+}
+
+/* ===== Header ===== */
+header {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #121212; /* fondo oscuro para el resto del header */
+    position: relative;
+}
+
+/* Franja blanca donde está el logo */
+#logo-container {
+    background-color: #ffffff; /* franja blanca */
+    padding: 20px 0;
+}
+
+/* Logo centrado */
+#logo {
+    max-width: 400px;
+    width: 80%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+/* Imagen del nombre de la tienda */
+header img#logo {
+    max-width: 400px; /* ajusta el tamaño de la imagen del logo */
+    width: 80%;
+    height: auto;
+}
+
+/* ===== Contenedor de productos ===== */
+#products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 30px 20px;
+    gap: 25px;
+}
+
+/* ===== Tarjetas de productos ===== */
+.item {
+    background: #ffffff; /* fondo inicial blanco */
+    border-radius: 15px;
+    width: 230px;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s; /* transición suave */
+    text-align: center;
+    cursor: pointer;
+}
+
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(30,144,255,0.4); /* sombra azul */
+    background-color: #1E90FF; /* azul fuerte al pasar el ratón */
+    color: #fff; /* opcional: cambia el texto a blanco para contraste */
+}
+
+/* ===== Imagen del producto ===== */
+.item img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+/* ===== Nombre y precio ===== */
+/* Nombre del producto */
+.item h3 {
+    font-size: 18px;
+    margin: 10px 0 5px;
+    color: #000000; /* negro inicial */
+    transition: color 0.2s;
+}
+
+/* Precio del producto */
+.item p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000000; /* negro inicial */
+    transition: color 0.2s;
+}
+
+/* Hover de la tarjeta */
+.item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(30,144,255,0.4); /* sombra azul */
+    background-color: #1E90FF; /* fondo azul fuerte */
+}
+
+/* Texto dentro de la tarjeta al hacer hover */
+.item:hover h3,
+.item:hover p {
+    color: #ffffff; /* texto blanco sobre fondo azul */
+}
+
+/* ===== Botón comprar ===== */
+.item a img {
+    margin-top: 10px;
+    width: 160px;
+    transition: transform 0.2s;
+}
+
+.item a img:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Links ===== */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    opacity: 0.9;
+}
+
+/* ===== Footer opcional ===== */
+footer {
+    text-align: center;
+    padding: 20px;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* ===== Botón del carrito dorado centrado debajo del logo ===== */
+#verCarrito {
+    display: inline-block;
+    background-color: #FFD700 !important; /* dorado */
+    color: #000 !important;               /* texto negro */
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 15px 25px !important;        /* tamaño más grande */
+    font-weight: bold !important;
+    font-size: 22px !important;           /* más visible */
+    cursor: pointer !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important; /* sombra */
+    margin-top: 15px !important;
+}
+
+#verCarrito span {
+    margin-left: 8px;
+}
+
+/* Asegura que el header centre el botón */
+header {
+    text-align: center;
+}
